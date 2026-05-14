@@ -20,289 +20,109 @@
       --z-ui: 10;
     }
 
-    /* Reset */
+    /* Reset + base */
     * { box-sizing: border-box; margin:0; padding:0; }
     html,body { height:100%; background:var(--bg); font-family:var(--mono); color:var(--neon-green); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    a { color:inherit; text-decoration:none; }
 
-    /* Fullscreen canvas background */
-    canvas#matrix {
-      position:fixed;
-      inset:0;
-      width:100%;
-      height:100%;
-      display:block;
-      z-index:var(--z-canvas);
-      pointer-events:none; /* allow clicks through */
-      background:transparent;
-    }
+    /* Canvas */
+    canvas#matrix { position:fixed; inset:0; width:100%; height:100%; display:block; z-index:var(--z-canvas); pointer-events:none; background:transparent; }
 
-    /* Center container */
-    .center {
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:var(--z-ui);
-      padding:24px;
-    }
+    /* Centering */
+    .center { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:var(--z-ui); padding:24px; }
 
-    /* Card base */
+    /* Card */
     .card {
-      width:360px;
-      height:120px;
-      max-width:calc(100% - 48px);
-      background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.45));
+      width:360px; height:140px; max-width:calc(100% - 48px);
+      background: linear-gradient(180deg, rgba(0,0,0,0.58), rgba(0,0,0,0.45));
       border:1px solid rgba(0,255,0,0.14);
       box-shadow: 0 0 24px rgba(0,255,0,0.06), 0 4px 40px rgba(0,0,0,0.6), inset 0 0 8px rgba(0,255,0,0.02);
       backdrop-filter: blur(6px);
-      border-radius:12px;
-      padding:18px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
+      border-radius:12px; padding:18px;
+      display:flex; flex-direction:column; gap:12px;
       transition: width 420ms cubic-bezier(.2,.9,.2,1), height 420ms cubic-bezier(.2,.9,.2,1), transform 360ms ease, box-shadow 260ms ease;
-      overflow:hidden;
-      cursor:default;
-      position:relative;
+      overflow:hidden; cursor:default; position:relative;
     }
-
-    /* glowing border */
     .card::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:12px;
-      pointer-events:none;
-      box-shadow: 0 0 28px rgba(0,255,0,0.18), 0 0 80px rgba(0,255,0,0.06), 0 0 2px rgba(0,255,0,0.2) inset;
+      content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none;
+      box-shadow: 0 0 28px rgba(0,255,0,0.18), 0 0 80px rgba(0,255,0,0.06), inset 0 0 2px rgba(0,255,0,0.06);
       transition: box-shadow 260ms ease, border-color 260ms ease;
     }
 
     /* Expanded (desktop hover) */
     @media (hover: hover) {
-      .card:hover {
-        width:860px;
-        height:520px;
-        transform:translateY(-6px);
-        box-shadow: 0 0 46px rgba(0,255,0,0.22), 0 10px 80px rgba(0,0,0,0.6);
-      }
-      .card:hover::before {
-        box-shadow: 0 0 66px rgba(0,255,0,0.28), 0 0 140px rgba(0,255,0,0.12);
-      }
+      .card:hover { width:880px; height:540px; transform:translateY(-6px); box-shadow: 0 0 66px rgba(0,255,0,0.22), 0 14px 120px rgba(0,0,0,0.7); }
+      .card:hover::before { box-shadow: 0 0 100px rgba(0,255,0,0.28); }
     }
+    .card.expanded { width:880px; height:540px; transform:translateY(-6px); box-shadow: 0 0 66px rgba(0,255,0,0.22), 0 14px 120px rgba(0,0,0,0.7); }
+    .card.expanded::before { box-shadow: 0 0 100px rgba(0,255,0,0.28); }
 
-    /* Expanded class for mobile tap toggle */
-    .card.expanded {
-      width:860px;
-      height:520px;
-      transform:translateY(-6px);
-      box-shadow: 0 0 46px rgba(0,255,0,0.22), 0 10px 80px rgba(0,0,0,0.6);
-    }
-    .card.expanded::before {
-      box-shadow: 0 0 66px rgba(0,255,0,0.28), 0 0 140px rgba(0,255,0,0.12);
-    }
+    /* Header */
+    .header { font-size:20px; letter-spacing:1px; color:var(--neon-green); text-shadow: 0 0 8px rgba(0,255,0,0.15); display:flex; align-items:center; gap:12px; }
+    .typer { font-weight:700; white-space:nowrap; overflow:hidden; display:inline-block; }
 
-    /* Header (typing) */
-    .header {
-      font-size:20px;
-      letter-spacing:1px;
-      color:var(--neon-green);
-      text-shadow: 0 0 8px rgba(0,255,0,0.15), 0 0 24px rgba(0,255,0,0.04);
-      white-space:nowrap;
-      overflow:hidden;
-      display:flex;
-      align-items:center;
-      gap:14px;
-    }
-
-    .header .title {
-      display:inline-block;
-      min-width:220px;
-    }
-
-    /* Typing caret for header */
-    .typer {
-      font-weight:700;
-    }
-
-    /* Search area */
-    .controls {
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    .input-wrap {
-      position:relative;
-      flex:1;
-      min-width:80px;
-    }
+    /* Controls */
+    .controls { display:flex; gap:8px; align-items:center; }
+    .input-wrap { position:relative; flex:1; min-width:80px; }
     input.search {
-      width:100%;
-      background:transparent;
-      border:1px solid rgba(0,255,0,0.12);
-      color:var(--neon-green);
-      padding:12px 14px;
-      border-radius:8px;
-      outline:none;
-      box-shadow: inset 0 -8px 24px rgba(0,0,0,0.6);
-      font-family:var(--mono);
-      font-size:14px;
-      caret-color:var(--neon-green);
+      width:100%; background:transparent; border:1px solid rgba(0,255,0,0.12);
+      color:var(--neon-green); padding:12px 14px; border-radius:8px; outline:none;
+      box-shadow: inset 0 -8px 24px rgba(0,0,0,0.6); font-family:var(--mono); font-size:14px; caret-color:var(--neon-green);
       transition: box-shadow 160ms ease, border 160ms ease;
     }
-
-    /* terminal block cursor effect */
-    input.search::selection { background: rgba(0,255,0,0.12); }
-    .input-wrap .block-caret {
-      position:absolute;
-      top:50%;
-      left:12px;
-      transform:translateY(-50%);
-      width:8px;
-      height:18px;
-      background:transparent;
-      border-left:2px solid var(--neon-green);
-      animation: blinkCaret 1s steps(2,start) infinite;
-      pointer-events:none;
-      mix-blend-mode:screen;
-    }
+    .input-wrap .block-caret { position:absolute; top:50%; left:12px; transform:translateY(-50%); width:8px; height:18px; background:transparent; border-left:2px solid var(--neon-green); animation: blinkCaret 1s steps(2,start) infinite; pointer-events:none; mix-blend-mode:screen; }
     input.search.with-caret { padding-left:28px; }
+    @keyframes blinkCaret { 0% { opacity:1; } 50% { opacity:0; } 100% { opacity:1; } }
 
-    @keyframes blinkCaret {
-      0% { opacity:1; }
-      50% { opacity:0; }
-      100% { opacity:1; }
-    }
-
-    select.type {
-      background:transparent;
-      border:1px solid rgba(0,255,0,0.12);
-      color:var(--neon-green);
-      padding:10px 12px;
-      border-radius:8px;
-      font-family:var(--mono);
-      font-size:13px;
-      outline:none;
-    }
-
-    button.scan {
-      background:linear-gradient(180deg, rgba(0,255,0,0.06), rgba(0,255,0,0.02));
-      border:1px solid rgba(0,255,0,0.12);
-      color:var(--neon-green);
-      padding:10px 12px;
-      border-radius:8px;
-      cursor:pointer;
-      font-family:var(--mono);
-      transition: transform 160ms ease, box-shadow 160ms ease;
-    }
+    select.type { background:transparent; border:1px solid rgba(0,255,0,0.12); color:var(--neon-green); padding:10px 12px; border-radius:8px; font-family:var(--mono); font-size:13px; outline:none; }
+    button.scan { background:linear-gradient(180deg, rgba(0,255,0,0.06), rgba(0,255,0,0.02)); border:1px solid rgba(0,255,0,0.12); color:var(--neon-green); padding:10px 12px; border-radius:8px; cursor:pointer; font-family:var(--mono); transition: transform 120ms ease; }
     button.scan:active { transform:translateY(1px) scale(.997); }
+    button.scan[disabled] { opacity:0.45; cursor:not-allowed; }
 
-    /* Results terminal list */
-    .results {
-      margin-top:6px;
-      background: rgba(0,0,0,0.55);
-      border:1px solid rgba(0,255,0,0.06);
-      padding:12px;
-      border-radius:8px;
-      height:0;
-      overflow:auto;
-      transition: height 360ms ease;
-      font-size:13px;
-    }
+    /* small status row */
+    .status-row { display:flex; gap:8px; align-items:center; color:rgba(0,255,0,0.45); font-size:12px; margin-top:4px; }
+    .spinner { width:12px; height:12px; border-radius:50%; border:2px solid rgba(0,255,0,0.12); border-top-color:var(--neon-green); animation: spin 800ms linear infinite; display:none; }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-    .card.expanded .results, .card:hover .results {
-      height:220px;
-    }
-
-    .result-item {
-      padding:8px 6px;
-      border-bottom:1px dashed rgba(0,255,0,0.05);
-      display:flex;
-      gap:10px;
-      align-items:center;
-      color:var(--neon-green);
-      text-decoration:none;
-    }
-    .result-item:last-child { border-bottom:0; }
-    .result-item .meta { color:rgba(0,255,0,0.6); font-size:12px; min-width:110px; }
-    .result-item:hover { background: rgba(0,255,0,0.02); }
-
-    /* scroll bar */
-    .results::-webkit-scrollbar { height:8px; width:8px; }
-    .results::-webkit-scrollbar-thumb { background: rgba(0,255,0,0.12); border-radius:8px; }
-    .results::-webkit-scrollbar-track { background: transparent; }
+    /* results */
+    .results { margin-top:6px; background: rgba(0,0,0,0.55); border:1px solid rgba(0,255,0,0.06); padding:8px; border-radius:8px; height:0; overflow:auto; transition: height 360ms ease; font-size:13px; display:flex; flex-direction:column; gap:6px; }
+    .card.expanded .results, .card:hover .results { height:220px; }
+    .result-item { padding:8px; border-radius:6px; display:flex; gap:10px; align-items:center; color:var(--neon-green); background:transparent; transition: background 140ms ease, transform 140ms ease; outline:none; }
+    .result-item[aria-selected="true"] { background: rgba(0,255,0,0.06); transform:translateX(2px); }
+    .result-item .meta { color:rgba(0,255,0,0.6); font-size:12px; min-width:90px; }
+    .result-item .desc { color:rgba(0,255,0,0.38); font-size:12px; }
+    .result-top { display:flex; gap:8px; align-items:center; width:100%; justify-content:space-between; }
+    .avatar { width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid rgba(0,255,0,0.06); }
 
     /* contact */
-    .contact {
-      margin-top:auto;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      justify-content:space-between;
-    }
-    .contact .email {
-      color:var(--neon-green);
-      font-size:13px;
-      padding:8px 10px;
-      border-radius:8px;
-      border:1px solid rgba(0,255,0,0.08);
-      background:rgba(0,0,0,0.4);
-    }
-    .contact button.copy {
-      background:transparent;
-      border:1px solid rgba(0,255,0,0.12);
-      color:var(--neon-green);
-      padding:8px 10px;
-      border-radius:8px;
-      cursor:pointer;
-      font-family:var(--mono);
-    }
+    .contact { margin-top:auto; display:flex; align-items:center; gap:8px; justify-content:space-between; }
+    .email { color:var(--neon-green); font-size:13px; padding:8px 10px; border-radius:8px; border:1px solid rgba(0,255,0,0.08); background:rgba(0,0,0,0.4); }
+    .copy { background:transparent; border:1px solid rgba(0,255,0,0.12); color:var(--neon-green); padding:8px 10px; border-radius:8px; cursor:pointer; font-family:var(--mono); }
 
-    .toast {
-      position:absolute;
-      right:12px;
-      bottom:12px;
-      background: rgba(0,0,0,0.8);
-      color:var(--neon-green);
-      padding:8px 12px;
-      border-radius:8px;
-      border:1px solid rgba(0,255,0,0.06);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-      display:none;
-      font-size:13px;
-    }
+    .toast { position:absolute; right:12px; bottom:12px; background: rgba(0,0,0,0.9); color:var(--neon-green); padding:8px 12px; border-radius:8px; border:1px solid rgba(0,255,0,0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.6); display:none; font-size:13px; }
 
-    /* ERROR / NO RESULTS - glitch animations & red border */
-    .card.glitch {
-      animation: glitch-wild 800ms linear infinite;
-      border-color: rgba(255,0,0,0.9);
-    }
-    .card.glitch::before {
-      box-shadow: 0 0 36px rgba(255,0,0,0.28), 0 0 140px rgba(255,0,0,0.12);
-    }
+    /* ERROR / glitch */
+    .card.glitch { animation: glitch-wild 800ms linear infinite; border-color: rgba(255,0,0,0.95); }
+    .card.glitch::before { box-shadow: 0 0 56px rgba(255,0,0,0.28), 0 0 160px rgba(255,0,0,0.12); }
     @keyframes glitch-wild {
-      0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); filter: hue-rotate(0deg); }
-      10% { transform: translate3d(-6px,2px,0) rotate(-0.8deg) scale(1.02); }
-      20% { transform: translate3d(6px,-4px,0) rotate(0.6deg) scale(0.99); }
-      30% { transform: translate3d(-8px,6px,0) rotate(-1.2deg) scale(1.05); }
-      45% { transform: translate3d(6px,-8px,0) rotate(1.6deg) scale(0.98); }
-      60% { transform: translate3d(-2px,3px,0) rotate(-0.4deg) scale(1.01); }
-      75% { transform: translate3d(3px,-2px,0) rotate(0.3deg) scale(1.03); }
+      0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); }
+      10% { transform: translate3d(-8px,2px,0) rotate(-1deg) scale(1.02); }
+      20% { transform: translate3d(8px,-6px,0) rotate(1deg) scale(0.98); }
+      40% { transform: translate3d(-10px,8px,0) rotate(-1.4deg) scale(1.05); }
+      60% { transform: translate3d(6px,-8px,0) rotate(1.6deg) scale(0.97); }
+      80% { transform: translate3d(-2px,4px,0) rotate(-0.4deg) scale(1.01); }
       100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); }
     }
 
-    /* small responsive tweaks */
+    /* small responsive */
     @media (max-width:900px) {
       .card, .card.expanded, .card:hover { width:calc(100% - 48px); height:auto; max-height:80vh; }
       .card.expanded .results, .card:hover .results { height:220px; }
     }
 
-    /* small helper */
-    a.result-item { color:inherit; text-decoration:none; display:flex; flex-direction:row; align-items:center; gap:10px; }
-    .avatar { width:32px; height:32px; border-radius:6px; object-fit:cover; border:1px solid rgba(0,255,0,0.06); }
-
-    /* accessible focus */
+    /* accessibility focus */
     .card :focus { outline:2px dashed rgba(0,255,0,0.12); outline-offset:4px; }
+    .hint { color:rgba(0,255,0,0.28); font-size:12px; }
   </style>
 </head>
 <body>
@@ -310,16 +130,20 @@
 
   <div class="center" id="center">
     <div class="card" id="card" role="region" aria-label="Interactive search card">
-      <div class="header" aria-hidden="false">
-        <div class="title">
-          <span class="typer" id="typer" aria-hidden="true"></span>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div class="header" aria-hidden="false">
+          <div class="typer" id="typer" aria-hidden="true"></div>
+          <div class="hint" style="margin-left:8px">/ to focus • Esc to reset</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="authToggle" class="scan" title="Toggle optional token auth" aria-label="Toggle auth">AUTH</button>
         </div>
       </div>
 
       <div class="controls" role="search" aria-label="Live GitHub search">
         <div class="input-wrap">
           <div class="block-caret" aria-hidden="true"></div>
-          <input id="searchInput" class="search with-caret" placeholder="scan query..." aria-label="Search GitHub" />
+          <input id="searchInput" class="search with-caret" placeholder="scan query... (try: electron, react, sprocketi777)" aria-label="Search GitHub" autocomplete="off" />
         </div>
         <select id="searchType" class="type" aria-label="Search type">
           <option value="all">All</option>
@@ -329,7 +153,20 @@
         <button id="scanBtn" class="scan" aria-label="Scan GitHub">SCAN</button>
       </div>
 
+      <div class="status-row" aria-hidden="false" id="statusRow">
+        <div class="spinner" id="spinner" aria-hidden="true"></div>
+        <div id="statusText">idle</div>
+        <div style="margin-left:auto;color:rgba(0,255,0,0.28);font-size:12px" id="rateInfo"></div>
+      </div>
+
       <div class="results" id="results" role="list" aria-label="Search results (top 5)"></div>
+
+      <div style="display:flex;gap:8px;flex-direction:column;margin-top:6px">
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="tokenInput" placeholder="Optional GitHub token (session only)" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(0,255,0,0.06);color:var(--neon-green);display:none" aria-label="GitHub token" />
+          <button id="saveToken" class="scan" style="display:none">SAVE</button>
+        </div>
+      </div>
 
       <div class="contact">
         <div class="email" id="emailText">EMAIL: sprocket1777@protonmail.com</div>
@@ -338,23 +175,65 @@
         </div>
       </div>
 
-      <div class="toast" id="toast" role="status" aria-live="polite">SUCCESS: COPIED</div>
+      <div class="toast" id="toast" role="status" aria-live="polite">SUCCESS</div>
     </div>
   </div>
 
   <script>
-    /* ===========
-       Matrix Rain
-       =========== */
+    /* ----------------------
+       MatrixRain - realistic code fragments, multi-length streams
+       ---------------------- */
     class MatrixRain {
       constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d', { alpha: true });
-        this.chars = ('アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロゴゾドボポ0123456789@#$%&*=+-<>/[]{}()').split('');
+
+        // curated snippets (longer strings + symbols). We keep as an array for easier indexing.
+        this.pool = [
+`function init(){const el=document.getElementById('app');for(let i=0;i<10;i++){console.log(i);} }`,
+`async function fetchData(url){try{const res=await fetch(url);return await res.json();}catch(e){console.error(e);} }`,
+`<div class="card"> ... </div>`,
+`#container { display:flex; gap:8px; align-items:center; }`,
+`let i = 0; while(i < n) { i++; }`,
+`const handler = e => { e.preventDefault(); return false; }`,
+`fetch('/api/data').then(r => r.json()).catch(err => console.error(err));`,
+`class App { constructor(){ this.state = {} } render(){ return '<div/>' } }`,
+`=> === !== == <= >= ++ -- && || |>`,
+`0xFF, 0b1010, 12345, true, false, null`,
+`/* TODO: optimize path */`,
+`setTimeout(()=>{ requestAnimationFrame(loop); }, 1000);`,
+`map.filter.reduce((a,b)=>a+b,0)`,
+`document.querySelectorAll('.result-item')`,
+`console.log('%cTRACE','color:#0f0')`,
+`function* gen(){ yield 1; yield 2; }`,
+`style="color:#0f0;background:#000"`,
+`@media (max-width:900px) { display:block; }`,
+`export default async function main(){ await init(); }`,
+`if(user){ show(user.name) } else { login() }`,
+`return typeof v === 'string' ? v.slice(0,10) : null`,
+`for(const k in obj){ if(obj.hasOwnProperty(k)) console.log(k) }`,
+`try{ doWork() } catch(err){ throw err } finally{ cleanup() }`,
+`<input type="text" name="q" />`,
+`const node = document.createElement('div'); node.className='item'`,
+`(()=>{ /* iife */ })();`,
+`JSON.stringify({a:1,b:2}, null, 2);`,
+`/regex/gi.test(str)`,
+`await Promise.all(tasks.map(t=>t()))`,
+`new Uint8Array(1024)`,
+`<a href="https://github.com">repo</a>`,
+`border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.6);`,
+`document.addEventListener('click', handler, {passive:true})`,
+`const PI = Math.PI; Math.sin(x) * 2`,
+`/* security: do not commit tokens */`
+        ];
+
+        // flattened string used for substring sampling to create flowing fragments
+        this.codePool = this.pool.join('  |  ');
+
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.dpr = Math.max(1, window.devicePixelRatio || 1);
-        this.columnSize = 18; // font size
+        this.columnSize = 14; // pixel size
         this.columns = Math.floor(this.width / this.columnSize);
         this.drops = new Array(this.columns).fill(0);
         this.color = '#00FF00';
@@ -379,35 +258,32 @@
         this.columns = Math.max(2, Math.floor(this.width / this.columnSize));
         this.drops = new Array(this.columns).fill(0).map(() => Math.random() * this.height / this.columnSize);
         this.ctx.font = `${this.columnSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--mono') || 'monospace'}`;
+        this.ctx.textBaseline = 'top';
       }
 
       setState(state) {
-        // states: normal, fast, error
         if (state === 'normal') {
-          this.color = '#00FF00';
-          this.secondary = '#008000';
-          this.speedMultiplier = 1;
+          this.color = '#00FF00'; this.secondary = '#008000'; this.speedMultiplier = 1;
         } else if (state === 'fast') {
-          this.color = '#00FF00';
-          this.secondary = '#008000';
-          this.speedMultiplier = 4.2;
+          this.color = '#00FF00'; this.secondary = '#008000'; this.speedMultiplier = 4.8;
         } else if (state === 'error') {
-          this.color = '#FF0000';
-          this.secondary = '#8B0000';
-          this.speedMultiplier = 1; // chaotic handled below
+          this.color = '#FF0000'; this.secondary = '#8B0000'; this.speedMultiplier = 1;
         }
       }
 
-      drawChar(x, y, ch, alpha, glowColor) {
-        const ctx = this.ctx;
-        ctx.fillStyle = glowColor;
-        ctx.globalAlpha = alpha * 0.25;
-        ctx.fillText(ch, x, y);
-        // sharp glow
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = '#fff'; // bright core
-        ctx.fillText(ch, x, y);
-        ctx.globalAlpha = 1;
+      // sample a variable-length fragment, prefer whole tokens
+      getFragment() {
+        const pool = this.codePool;
+        const maxLen = 18;
+        const minLen = 3;
+        const len = Math.floor(Math.random() * (maxLen - minLen + 1)) + minLen;
+        // pick a start near token boundaries for more meaningful fragments
+        const start = Math.floor(Math.random() * Math.max(1, pool.length - len));
+        let frag = pool.substr(start, len);
+        // trim leading/trailing spaces, collapse whitespace
+        frag = frag.replace(/\s+/g, ' ').trim();
+        if (!frag) return 'const ';
+        return frag.length > 0 ? frag : 'const ';
       }
 
       loop(now) {
@@ -415,45 +291,43 @@
         const dt = now - this.lastTime;
         this.lastTime = now;
         const ctx = this.ctx;
-        // faded background for trailing effect
+        // trail
         ctx.fillStyle = 'rgba(0,0,0,0.12)';
         ctx.fillRect(0, 0, this.width, this.height);
 
         for (let i = 0; i < this.columns; i++) {
           const x = i * this.columnSize;
-          let y = this.drops[i] * this.columnSize;
-          // determine char
-          const ch = this.chars[Math.floor(Math.random() * this.chars.length)];
-          // pick alpha based on position
+          const y = this.drops[i] * this.columnSize;
+          const fragment = this.getFragment();
           const alpha = Math.random() * 0.9 + 0.1;
 
-          // error state: chaotic speed and red glow
           if (this.color === '#FF0000') {
-            const chaoticSpeed = (Math.random() * 10 + 4) * (this.dpr * 0.6);
-            this.drawChar(x, y, ch, alpha, this.secondary);
-            this.drops[i] += chaoticSpeed * (dt/16);
-            // occasionally jump back
-            if (Math.random() < 0.02) this.drops[i] = -Math.random() * 20;
-            if (this.drops[i] * this.columnSize > this.height && Math.random() > 0.85) {
-              this.drops[i] = Math.random() * 2;
-            }
+            // chaotic red
+            const chaoticSpeed = (Math.random() * 16 + 6) * (this.dpr * 0.6);
+            ctx.shadowBlur = Math.floor(Math.random() * 20) + 8;
+            ctx.shadowColor = this.secondary;
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = Math.min(1, alpha + 0.3);
+            ctx.fillText(fragment, x, y);
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 0;
+            this.drops[i] += chaoticSpeed * (dt / 16);
+            if (Math.random() < 0.03) this.drops[i] = -Math.random() * 20;
+            if (this.drops[i] * this.columnSize > this.height && Math.random() > 0.7) this.drops[i] = Math.random() * 2;
           } else {
-            // normal/fast
-            const speed = (2 + (i % 5) * 0.6) * this.speedMultiplier * (this.dpr * 0.6);
-            // glow color gradient
-            const glow = this.color;
-            this.ctx.shadowBlur = 12;
-            this.ctx.shadowColor = glow;
-            this.ctx.fillStyle = glow;
-            this.ctx.fillText(ch, x, y);
-            this.ctx.shadowBlur = 0;
-            this.drops[i] += speed * (dt/16);
+            // green normal/fast
+            const speed = (1.2 + (i % 7) * 0.5) * this.speedMultiplier * (this.dpr * 0.6);
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = Math.min(1, alpha + 0.2);
+            ctx.fillText(fragment, x, y);
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 0;
+            this.drops[i] += speed * (dt / 16);
             if (this.drops[i] * this.columnSize > this.height) {
-              if (Math.random() > 0.975) {
-                this.drops[i] = 0;
-              } else {
-                this.drops[i] = Math.random() * 1.2;
-              }
+              if (Math.random() > 0.98) this.drops[i] = 0;
+              else this.drops[i] = Math.random() * 1.2;
             }
           }
         }
@@ -462,321 +336,300 @@
       }
     }
 
-    /* ===========
-       Typing header
-       =========== */
+    /* ----------
+       Typer header
+       ---------- */
     class Typer {
-      constructor(element, phrases = []) {
-        this.el = element;
+      constructor(el, phrases) {
+        this.el = el;
         this.phrases = phrases;
-        this.index = 0;
-        this.ch = 0;
-        this.direction = 1; // 1 typing, -1 deleting
-        this.delay = 80;
-        this.pauseAfter = 900;
-        this.timer = null;
-        this.running = true;
-        this.start();
+        this.i = 0; this.ch = 0; this.dir = 1; this.delay = 60; this.pause = 900; this.t = null; this.start();
       }
-      start() {
-        this.running = true;
-        this.tick();
-      }
-      stop() {
-        this.running = false;
-        if (this.timer) clearTimeout(this.timer);
-      }
-      reset() {
-        this.stop();
-        this.index = 0;
-        this.ch = 0;
-        this.direction = 1;
-        this.el.textContent = '';
-        this.start();
-      }
-      tick() {
-        if (!this.running) return;
-        const phrase = this.phrases[this.index];
-        if (this.direction === 1) {
-          this.ch++;
-          this.el.textContent = phrase.slice(0, this.ch);
-          if (this.ch === phrase.length) {
-            this.direction = -1;
-            this.timer = setTimeout(() => this.tick(), this.pauseAfter);
-            return;
-          }
+      start(){ this.t = setTimeout(()=>this.tick(), 200); }
+      stop(){ clearTimeout(this.t); this.t=null; }
+      reset(){ this.stop(); this.i=0; this.ch=0; this.dir=1; this.el.textContent=''; this.start(); }
+      tick(){
+        const p = this.phrases[this.i];
+        if (this.dir === 1){
+          this.ch++; this.el.textContent = p.slice(0,this.ch);
+          if (this.ch === p.length){ this.dir = -1; this.t = setTimeout(()=>this.tick(), this.pause); return; }
         } else {
-          this.ch--;
-          this.el.textContent = phrase.slice(0, this.ch);
-          if (this.ch === 0) {
-            this.direction = 1;
-            this.index = (this.index + 1) % this.phrases.length;
-          }
+          this.ch--; this.el.textContent = p.slice(0,this.ch);
+          if (this.ch === 0){ this.dir=1; this.i = (this.i+1)%this.phrases.length; }
         }
-        const jitter = Math.max(40, this.delay + (Math.random() * 60 - 30));
-        this.timer = setTimeout(() => this.tick(), jitter);
+        const jitter = Math.max(30, this.delay + Math.random()*80 - 40);
+        this.t = setTimeout(()=>this.tick(), jitter);
       }
     }
 
-    /* ===========
-       Helper utils
-       =========== */
-    function el(id) { return document.getElementById(id); }
-    function debounce(fn, wait){ let t; return (...a) => { clearTimeout(t); t = setTimeout(()=>fn(...a), wait); }; }
+    /* ----------
+       Utilities
+       ---------- */
+    function $(id){ return document.getElementById(id); }
+    function debounce(fn, wait){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait); }; }
+    function el(tag, attrs={}, ...children){ const e=document.createElement(tag); Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v)); children.forEach(c=>{ if(typeof c==='string') e.appendChild(document.createTextNode(c)); else if(c) e.appendChild(c); }); return e; }
 
-    /* ===========
-       Main Initialization
-       =========== */
+    /* ----------
+       App init
+       ---------- */
     (function(){
-      const canvas = el('matrix');
+      const canvas = $('matrix');
       const rain = new MatrixRain(canvas);
-
-      // Typer header
-      const typer = new Typer(el('typer'), [
+      const typer = new Typer($('typer'), [
         'SYSTEM_OVERRIDE // SPROCKET',
-        'INITIATING // LIVE_SCAN',
-        'NEURAL_LINK // ONLINE',
-        'TRACER // ACTIVE'
+        'LIVE_SCAN // ONLINE',
+        'NEURAL_LINK // ACTIVE',
+        'TRACER // ENGAGED'
       ]);
 
-      // elements
-      const card = el('card');
-      const searchInput = el('searchInput');
-      const searchType = el('searchType');
-      const scanBtn = el('scanBtn');
-      const resultsWrap = el('results');
-      const copyBtn = el('copyBtn');
-      const toast = el('toast');
-      const emailText = el('emailText');
+      const card = $('card');
+      const input = $('searchInput');
+      const typeSel = $('searchType');
+      const scanBtn = $('scanBtn');
+      const resultsEl = $('results');
+      const spinner = $('spinner');
+      const statusText = $('statusText');
+      const rateInfo = $('rateInfo');
+      const copyBtn = $('copyBtn');
+      const toast = $('toast');
+      const authToggle = $('authToggle');
+      const tokenInput = $('tokenInput');
+      const saveToken = $('saveToken');
 
-      /* expand/contract interactions */
-      // desktop: on mouseenter -> fast, mouseleave -> reset
-      card.addEventListener('mouseenter', () => {
-        rain.setState('fast');
-      });
-      card.addEventListener('mouseleave', () => {
-        if (!card.classList.contains('expanded')) {
-          // when leaving and not mobile-expanded
-          rain.setState('normal');
-          resetCardState();
-        }
-      });
+      // Token handling (sessionStorage)
+      const TOKEN_KEY = 'gh_token_session';
+      function getToken(){ return sessionStorage.getItem(TOKEN_KEY) || ''; }
+      function setToken(t){ if(t) sessionStorage.setItem(TOKEN_KEY, t); else sessionStorage.removeItem(TOKEN_KEY); }
 
-      // mobile: tap toggles .expanded; clicking outside contracts
-      let tapToggle = false;
-      card.addEventListener('click', (e) => {
-        // if user clicked inside search input or buttons, don't toggle
-        if (e.target === searchInput || e.target === scanBtn || e.target === copyBtn || e.target.tagName === 'SELECT' || e.target.closest('.result-item')) return;
-        // toggle expanded on small screens or if already not hovered
-        if (window.matchMedia('(hover: none)').matches || window.innerWidth < 900) {
-          card.classList.toggle('expanded');
-          if (card.classList.contains('expanded')) {
-            rain.setState('fast');
-            // Reveal results area height handled by css
-          } else {
-            // contracted: reset everything
-            rain.setState('normal');
-            resetCardState();
-          }
-        }
-      });
-
-      // click outside to contract (mobile)
-      document.addEventListener('click', (e) => {
-        if (!card.contains(e.target) && card.classList.contains('expanded')) {
-          card.classList.remove('expanded');
-          rain.setState('normal');
-          resetCardState();
-        }
-      });
-
-      // keyboard: Escape resets
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          card.classList.remove('expanded');
-          rain.setState('normal');
-          resetCardState();
-        }
-      });
-
-      /* COPY email */
-      copyBtn.addEventListener('click', async () => {
-        const text = 'sprocket1777@protonmail.com';
-        try {
-          await navigator.clipboard.writeText(text);
-          showToast('SUCCESS: COPIED');
-        } catch (err) {
-          showToast('FAILED: COPY');
-        }
-      });
-
-      function showToast(msg='SUCCESS: COPIED') {
-        toast.textContent = msg;
-        toast.style.display = 'block';
-        setTimeout(()=>{ toast.style.display = 'none'; }, 2000);
+      // initialize token field if present
+      const existingToken = getToken();
+      if(existingToken){
+        tokenInput.value = existingToken;
+        tokenInput.style.display = '';
+        saveToken.style.display = '';
+        authToggle.classList.add('active');
       }
 
-      /* SEARCH logic */
-      const GITHUB_API_BASE = 'https://api.github.com';
-      let lastQuery = '';
-      let lastType = 'all';
-      let controller = null;
+      // auth toggle
+      authToggle.addEventListener('click', ()=> {
+        const visible = tokenInput.style.display === '' || tokenInput.style.display === 'block';
+        tokenInput.style.display = visible ? 'none' : 'block';
+        saveToken.style.display = visible ? 'none' : 'inline-block';
+      });
+      saveToken.addEventListener('click', ()=> {
+        const val = tokenInput.value.trim();
+        setToken(val);
+        showToast(val ? 'TOKEN SAVED (session)' : 'TOKEN CLEARED');
+      });
 
-      async function doSearch(query, type = 'all') {
-        // basic guard
-        if (!query || query.trim().length === 0) {
-          resultsWrap.innerHTML = '';
+      // spinner and status
+      function setBusy(b, text='') {
+        spinner.style.display = b ? 'inline-block' : 'none';
+        statusText.textContent = text || (b ? 'scanning…' : 'idle');
+      }
+      function setRateInfo(s){ rateInfo.textContent = s || ''; }
+
+      // keyboard shortcuts
+      document.addEventListener('keydown', (e)=>{
+        // "/" focuses search unless inside an input
+        if(e.key === '/' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){
+          e.preventDefault();
+          input.focus();
+          input.select();
           return;
         }
-        // cancel previous
-        if (controller) controller.abort();
+        if(e.key === 'Escape'){
+          collapseAndReset();
+        }
+      });
+
+      // expand/contract interactions
+      card.addEventListener('mouseenter', ()=> rain.setState('fast'));
+      card.addEventListener('mouseleave', ()=> { if(!card.classList.contains('expanded')) { rain.setState('normal'); resetUI(); } });
+
+      card.addEventListener('click', (e)=>{
+        if([input, scanBtn, copyBtn, authToggle, saveToken].includes(e.target) || e.target.closest('.result-item')) return;
+        if(window.matchMedia('(hover: none)').matches || window.innerWidth < 900){
+          card.classList.toggle('expanded');
+          if(card.classList.contains('expanded')) { rain.setState('fast'); input.focus(); }
+          else { rain.setState('normal'); resetUI(); }
+        }
+      });
+
+      document.addEventListener('click', (e)=>{
+        if(!card.contains(e.target) && card.classList.contains('expanded')) {
+          card.classList.remove('expanded');
+          rain.setState('normal');
+          resetUI();
+        }
+      });
+
+      // copy email
+      copyBtn.addEventListener('click', async ()=>{
+        try { await navigator.clipboard.writeText('sprocket1777@protonmail.com'); showToast('SUCCESS: COPIED'); }
+        catch(e){ showToast('FAILED'); }
+      });
+
+      function showToast(msg='OK', ms=2000){
+        toast.textContent = msg; toast.style.display = 'block';
+        setTimeout(()=>{ toast.style.display = 'none'; }, ms);
+      }
+
+      /* ------------------
+         Search & GitHub API
+         ------------------ */
+      const GITHUB_API = 'https://api.github.com';
+      let controller = null;
+      let selectedIndex = -1;
+      let lastResults = [];
+
+      async function apiFetch(url){
+        const headers = { 'Accept': 'application/vnd.github+json' };
+        const token = getToken();
+        if(token) headers['Authorization'] = 'token ' + token;
+        const res = await fetch(url, { headers, signal: controller ? controller.signal : undefined });
+        // update rate info if present
+        try {
+          const rl = res.headers.get('x-ratelimit-remaining');
+          const reset = res.headers.get('x-ratelimit-reset');
+          if(rl) {
+            const r = parseInt(rl,10);
+            if(reset) {
+              const resetAgo = Math.max(0, Math.floor((parseInt(reset,10)*1000 - Date.now())/1000));
+              setRateInfo(`${r} • reset:${Math.max(0, Math.ceil(resetAgo/60))}m`);
+            } else setRateInfo(String(r));
+          }
+        } catch(e){}
+        if(!res.ok) throw new Error('API ' + res.status);
+        return res.json();
+      }
+
+      async function doSearch(query, type='all'){
+        if(!query || !query.trim()) { resultsEl.innerHTML=''; lastResults=[]; selectedIndex=-1; return; }
+        // abort previous
+        if(controller) controller.abort();
         controller = new AbortController();
-        const signal = controller.signal;
 
-        lastQuery = query;
-        lastType = type;
-
-        // show interim
-        resultsWrap.innerHTML = `<div style="color:rgba(0,255,0,0.35);font-size:13px;padding:8px">SCANNING…</div>`;
+        setBusy(true, 'scanning…');
+        statusText.textContent = 'scanning…';
+        selectedIndex = -1;
+        lastResults = [];
+        resultsEl.innerHTML = '';
 
         try {
           const results = [];
-          if (type === 'repositories' || type === 'all') {
-            const url = `${GITHUB_API_BASE}/search/repositories?q=${encodeURIComponent(query)}&per_page=5`;
-            const res = await fetch(url, { signal });
-            if (!res.ok) throw new Error('API Error');
-            const data = await res.json();
-            const repos = (data.items || []).slice(0,5).map(r => ({
-              kind: 'repo', name: r.full_name, desc: r.description || '', url: r.html_url
-            }));
-            results.push(...repos);
+          if(type === 'repositories' || type === 'all'){
+            const url = `${GITHUB_API}/search/repositories?q=${encodeURIComponent(query)}&per_page=5`;
+            const data = await apiFetch(url);
+            (data.items || []).slice(0,5).forEach(r => results.push({ kind:'repo', name: r.full_name, desc:r.description, url:r.html_url, stars:r.stargazers_count, lang:r.language }));
           }
-          if (type === 'users' || type === 'all') {
-            const url = `${GITHUB_API_BASE}/search/users?q=${encodeURIComponent(query)}&per_page=5`;
-            const res = await fetch(url, { signal });
-            if (!res.ok) throw new Error('API Error');
-            const data = await res.json();
-            const users = (data.items || []).slice(0,5).map(u => ({
-              kind: 'user', name: u.login, avatar: u.avatar_url, url: u.html_url
-            }));
-            results.push(...users);
+          if(type === 'users' || type === 'all'){
+            const url = `${GITHUB_API}/search/users?q=${encodeURIComponent(query)}&per_page=5`;
+            const data = await apiFetch(url);
+            (data.items || []).slice(0,5).forEach(u => results.push({ kind:'user', name:u.login, avatar:u.avatar_url, url:u.html_url }));
           }
-
-          // If 'all', combine and take top 5 by simple priority (repos first then users)
+          // combine for 'all' with simple priority
           let final = results;
-          if (type === 'all') final = (results.filter(r=>r.kind==='repo')).slice(0,3).concat((results.filter(r=>r.kind==='user')).slice(0,2)).slice(0,5);
+          if(type === 'all') final = results.filter(r=>r.kind==='repo').slice(0,3).concat(results.filter(r=>r.kind==='user').slice(0,2)).slice(0,5);
 
-          if (!final || final.length === 0) {
-            triggerErrorState();
+          if(!final.length){
+            triggerError('no results');
             renderNoResults();
             return;
           }
-
-          // render
           renderResults(final);
-        } catch (err) {
-          if (err.name === 'AbortError') return;
+        } catch(err){
+          if(err.name === 'AbortError') return;
           console.error(err);
-          triggerErrorState();
+          triggerError('api error');
           renderError(err);
+        } finally {
+          setBusy(false, '');
         }
       }
 
-      const debounced = debounce((val, type) => doSearch(val, type), 420);
-
-      searchInput.addEventListener('input', (e) => {
+      const debouncedSearch = debounce((q,t)=>doSearch(q,t), 380);
+      input.addEventListener('input', (e)=> {
         const q = e.target.value;
-        const t = searchType.value;
-        debounced(q, t);
+        debouncedSearch(q, typeSel.value);
+        scanBtn.disabled = q.trim().length === 0;
       });
-
-      // press Enter triggers immediate search
-      searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          doSearch(searchInput.value, searchType.value);
+      input.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter'){ doSearch(input.value, typeSel.value); return; }
+        // navigation
+        if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+          e.preventDefault();
+          if(lastResults.length === 0) return;
+          if(e.key === 'ArrowDown') selectedIndex = Math.min(lastResults.length - 1, selectedIndex + 1);
+          else selectedIndex = Math.max(0, selectedIndex - 1);
+          updateSelection();
         }
       });
 
-      scanBtn.addEventListener('click', () => {
-        doSearch(searchInput.value, searchType.value);
-      });
+      scanBtn.addEventListener('click', ()=> doSearch(input.value, typeSel.value));
 
-      function renderResults(items) {
+      function renderResults(list){
         card.classList.remove('glitch');
-        rain.setState('fast'); // keep fast because card is expanded
-        resultsWrap.innerHTML = '';
-        const list = document.createElement('div');
-        list.setAttribute('role','list');
-        items.slice(0,5).forEach(item => {
-          const a = document.createElement('a');
-          a.className = 'result-item';
-          a.href = item.url;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          if (item.kind === 'repo') {
-            a.innerHTML = `<div style="flex:1">
-              <div style="display:flex;align-items:center;gap:8px;">
-                <div class="meta" style="min-width:100px">REPO</div>
-                <div style="font-weight:700">${escapeHtml(item.name)}</div>
+        rain.setState('fast');
+        resultsEl.innerHTML = '';
+        lastResults = list;
+        selectedIndex = -1;
+        list.forEach((it, idx)=>{
+          const row = document.createElement('div');
+          row.className = 'result-item';
+          row.tabIndex = 0;
+          row.setAttribute('role','listitem');
+          row.dataset.index = idx;
+          row.innerHTML = `
+            <div style="display:flex;gap:8px;align-items:center;flex:1">
+              ${it.avatar ? `<img class="avatar" src="${it.avatar}" alt="${it.name} avatar">` : '<div style="width:36px;height:36px;border-radius:6px;background:rgba(0,255,0,0.04);display:inline-block"></div>'}
+              <div style="flex:1">
+                <div style="display:flex;gap:8px;align-items:center">
+                  <div style="font-weight:700">${escapeHtml(it.name)}</div>
+                  <div class="meta">${it.kind.toUpperCase()}</div>
+                </div>
+                <div class="desc">${escapeHtml(it.desc || (it.lang ? (it.lang + (it.stars ? (' • ★' + it.stars) : '')) : ''))}</div>
               </div>
-              <div style="color:rgba(0,255,0,0.45);font-size:12px;margin-top:6px">${escapeHtml(item.desc || '').slice(0,120)}</div>
-            </div>`;
-          } else {
-            a.innerHTML = `<div style="display:flex;align-items:center;gap:10px">
-              <img class="avatar" src="${item.avatar}" alt="${escapeHtml(item.name)} avatar" />
-              <div>
-                <div style="font-weight:700">${escapeHtml(item.name)}</div>
-                <div class="meta" style="margin-top:4px">${item.kind.toUpperCase()}</div>
-              </div>
-            </div>`;
-          }
-          resultsWrap.appendChild(a);
+            </div>
+            <div style="min-width:70px;text-align:right;color:rgba(0,255,0,0.28)">${it.kind==='repo' && it.stars ? '★ '+it.stars : ''}</div>
+          `;
+          // click opens
+          row.addEventListener('click', ()=> window.open(it.url, '_blank', 'noopener'));
+          row.addEventListener('keydown', (e)=> {
+            if(e.key === 'Enter') window.open(it.url, '_blank', 'noopener');
+          });
+          resultsEl.appendChild(row);
         });
       }
 
-      function renderNoResults() {
-        resultsWrap.innerHTML = `<div style="color:var(--blood-red);font-size:13px;padding:8px">NO RESULTS FOUND</div>`;
+      function updateSelection(){
+        const nodes = resultsEl.querySelectorAll('.result-item');
+        nodes.forEach(n => n.setAttribute('aria-selected', 'false'));
+        if(selectedIndex >= 0 && nodes[selectedIndex]){
+          nodes[selectedIndex].setAttribute('aria-selected', 'true');
+          nodes[selectedIndex].focus({preventScroll:true});
+        }
       }
 
-      function renderError(err) {
-        resultsWrap.innerHTML = `<div style="color:var(--blood-red);font-size:13px;padding:8px">API ERROR: ${escapeHtml(err.message || '')}</div>`;
+      function renderNoResults(){
+        resultsEl.innerHTML = `<div style="color:var(--blood-red);padding:10px">NO RESULTS — try broader terms or check spelling.</div>`;
+      }
+      function renderError(err){
+        resultsEl.innerHTML = `<div style="color:var(--blood-red);padding:10px">API ERROR: ${escapeHtml(err.message||err.toString())}</div>`;
       }
 
-      function triggerErrorState() {
-        // apply glitch, set rain to error
+      function triggerError(msg){
         card.classList.add('glitch');
         rain.setState('error');
+        setBusy(false,'');
       }
 
-      function resetCardState() {
-        // Reset typing animation, clear input, clear results, remove glitch, reset rain speed/color
+      function resetUI(){
         typer.reset();
-        searchInput.value = '';
-        resultsWrap.innerHTML = '';
+        input.value = '';
+        resultsEl.innerHTML = '';
+        lastResults = [];
+        selectedIndex = -1;
         card.classList.remove('glitch');
         rain.setState('normal');
-      }
-
-      // Utility to escape user-shown text
-      function escapeHtml(s) {
-        if (!s) return '';
-        return s.replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
-      }
-
-      /* INITIAL state */
-      rain.setState('normal');
-
-      /* Accessibility: focus into input when card expanded by hover/click */
-      card.addEventListener('transitionend', (e) => {
-        // when card gets bigger, focus input for quick typing
-        if ((card.classList.contains('expanded') || (window.matchMedia('(hover: hover)').matches && card.matches(':hover'))) && document.activeElement !== searchInput) {
-          searchInput.focus({ preventScroll: true });
-        }
-      });
-
-      // Prevent pointer events on canvas to allow interactions
-      canvas.style.pointerEvents = 'none';
-    })();
-  </script>
-</body>
-</html>
+        setRate
