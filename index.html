@@ -350,28 +350,13 @@
       constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d', { alpha: true });
-        // Use a selection of short real code snippets so the falling characters form readable code streaks
-        this.snippets = [
-          'function greet(name) {\n  console.log(`Hello, ${name}!`);\n}',
-          'const add = (a, b) => a + b;',
-          '<div class="card">\n  <h3>Title</h3>\n</div>',
-          'body {\n  background: #000;\n  color: #0f0;\n}',
-          'import React from "react";\nexport default App;',
-          'for (let i = 0; i < n; i++) {\n  process(i);\n}',
-          'if (err) {\n  throw err;\n}',
-          'const data = await fetch(url).then(r=>r.json());',
-          '// TODO: refactor this into smaller functions',
-          'console.log("sprocket // live")'
-        ];
-
+        this.chars = ('アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロゴゾドボポ0123456789@#$%&*=+-<>/[]{}()').split('');
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.dpr = Math.max(1, window.devicePixelRatio || 1);
-        this.columnSize = 16; // font size (px) for the rain
+        this.columnSize = 18; // font size
         this.columns = Math.floor(this.width / this.columnSize);
         this.drops = new Array(this.columns).fill(0);
-        // Map each column to a snippet index so columns show consistent streams
-        this.snippetMap = new Array(this.columns).fill(0).map(() => Math.floor(Math.random() * this.snippets.length));
         this.color = '#00FF00';
         this.secondary = '#008000';
         this.speedMultiplier = 1;
@@ -393,8 +378,6 @@
         this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
         this.columns = Math.max(2, Math.floor(this.width / this.columnSize));
         this.drops = new Array(this.columns).fill(0).map(() => Math.random() * this.height / this.columnSize);
-        // re-map snippets if columns changed
-        this.snippetMap = new Array(this.columns).fill(0).map(() => Math.floor(Math.random() * this.snippets.length));
         this.ctx.font = `${this.columnSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--mono') || 'monospace'}`;
       }
 
@@ -422,7 +405,7 @@
         ctx.fillText(ch, x, y);
         // sharp glow
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = '#fff'; // bright core for contrast
+        ctx.fillStyle = '#fff'; // bright core
         ctx.fillText(ch, x, y);
         ctx.globalAlpha = 1;
       }
@@ -439,42 +422,32 @@
         for (let i = 0; i < this.columns; i++) {
           const x = i * this.columnSize;
           let y = this.drops[i] * this.columnSize;
-
-          // choose a character from the assigned snippet so streams form real code
-          const snippet = this.snippets[this.snippetMap[i]] || this.snippets[0];
-          // compute an index based on vertical position so characters progress down the stream
-          const charIndex = Math.floor(this.drops[i]) % Math.max(1, snippet.length);
-          let ch = snippet.charAt(charIndex);
-          // ensure we don't render stray newlines; replace with a visible placeholder or space
-          if (ch === '\n' || ch === '\r') ch = ' ';
-
+          // determine char
+          const ch = this.chars[Math.floor(Math.random() * this.chars.length)];
           // pick alpha based on position
-          const alpha = 0.8 - (Math.random() * 0.45);
+          const alpha = Math.random() * 0.9 + 0.1;
 
           // error state: chaotic speed and red glow
           if (this.color === '#FF0000') {
             const chaoticSpeed = (Math.random() * 10 + 4) * (this.dpr * 0.6);
             this.drawChar(x, y, ch, alpha, this.secondary);
             this.drops[i] += chaoticSpeed * (dt/16);
-            // occasionally remap snippet for a glitchy look
-            if (Math.random() < 0.02) this.snippetMap[i] = Math.floor(Math.random() * this.snippets.length);
+            // occasionally jump back
+            if (Math.random() < 0.02) this.drops[i] = -Math.random() * 20;
             if (this.drops[i] * this.columnSize > this.height && Math.random() > 0.85) {
-              this.drops[i] = -Math.random() * 20;
+              this.drops[i] = Math.random() * 2;
             }
           } else {
             // normal/fast
             const speed = (2 + (i % 5) * 0.6) * this.speedMultiplier * (this.dpr * 0.6);
             // glow color gradient
             const glow = this.color;
-            this.ctx.shadowBlur = 14;
+            this.ctx.shadowBlur = 12;
             this.ctx.shadowColor = glow;
-            // render a slightly larger white core for readability on dark backgrounds
             this.ctx.fillStyle = glow;
             this.ctx.fillText(ch, x, y);
             this.ctx.shadowBlur = 0;
             this.drops[i] += speed * (dt/16);
-            // occasionally advance the snippet mapping so streams vary over time
-            if (Math.random() < 0.002) this.snippetMap[i] = Math.floor(Math.random() * this.snippets.length);
             if (this.drops[i] * this.columnSize > this.height) {
               if (Math.random() > 0.975) {
                 this.drops[i] = 0;
