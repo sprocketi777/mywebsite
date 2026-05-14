@@ -350,7 +350,7 @@
       constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d', { alpha: true });
-        this.chars = ('アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロゴゾドボポ0123456789@#$%&*=+-<>/[]{}()').split('');
+        this.chars = ('abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=/.,<>?':"":';[]{}\|0123456789@#$%&*=+-<>/[]{}()').split('');
         this.width = window.innerWidth;
         this.height = window.innerHeight;
         this.dpr = Math.max(1, window.devicePixelRatio || 1);
